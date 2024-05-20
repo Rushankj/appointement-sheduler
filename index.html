@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Photo Sharing App</title>
+<style>
+  body { font-family: Arial, sans-serif; }
+  .container { max-width: 800px; margin: auto; padding: 20px; }
+  .upload-section { margin-bottom: 20px; }
+  .image-preview { max-width: 100%; margin-top: 10px; }
+  .like-section { margin-top: 10px; }
+  .comments-section { margin-top: 20px; }
+  .comment { background: #f2f2f2; padding: 10px; margin-top: 5px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="upload-section">
+    <input type="file" id="imageUpload" accept="image/*" onchange="previewImage(event)">
+    <img id="imagePreview" class="image-preview" src="" alt="Image Preview">
+  </div>
+  <div class="like-section">
+    <button id="likeButton">Like</button>
+    <span id="likeCount">0</span> likes
+  </div>
+  <div class="comments-section">
+    <input type="text" id="commentInput" placeholder="Write a comment...">
+    <button onclick="postComment()">Post Comment</button>
+    <div id="commentsContainer"></div>
+  </div>
+</div>
+
+<script>
+  // Function to preview image after upload
+  function previewImage(event) {
+    const [file] = event.target.files;
+    if (file && file.size <= 5242880) { // 5 MB size limit
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('imagePreview').src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    } else {
+      alert('File is too large. Please upload a file smaller than 5 MB.');
+    }
+  }
+
+  // Function to handle likes
+  let likeCount = 0;
+  document.getElementById('likeButton').addEventListener('click', function() {
+    likeCount++;
+    document.getElementById('likeCount').textContent = likeCount;
+  });
+
+  // Function to post comments
+  function postComment() {
+    const commentInput = document.getElementById('commentInput');
+    const commentText = commentInput.value.trim();
+    if (commentText) {
+      const commentDiv = document.createElement('div');
+      commentDiv.classList.add('comment');
+      commentDiv.textContent = commentText;
+      document.getElementById('commentsContainer').appendChild(commentDiv);
+      commentInput.value = ''; // Clear input field
+    }
+  }
+</script>
+</body>
+</html>
